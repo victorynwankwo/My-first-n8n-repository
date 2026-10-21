@@ -1,8 +1,7 @@
 services:
-  # This installs your n8n automation engine
   - type: web
-    name: n8n-service
-    env: docker
+    name: n8n-automation-service
+    runtime: docker
     plan: free
     startCommand: n8n
     envVars:
@@ -11,29 +10,24 @@ services:
       - key: DB_TYPE
         value: postgresdb
       - key: DB_POSTGRESDB_HOST
-        fromService:
-          type: database
-          name: n8n-db
+        fromDatabase:
+          name: n8n-database-hub
           property: host
       - key: DB_POSTGRESDB_DATABASE
-        fromService:
-          type: database
-          name: n8n-db
+        fromDatabase:
+          name: n8n-database-hub
           property: database
       - key: DB_POSTGRESDB_USER
-        fromService:
-          type: database
-          name: n8n-db
+        fromDatabase:
+          name: n8n-database-hub
           property: user
       - key: DB_POSTGRESDB_PASSWORD
-        fromService:
-          type: database
-          name: n8n-db
+        fromDatabase:
+          name: n8n-database-hub
           property: password
 
-  # This sets up the database so your workflows never get deleted
-  - type: database
-    name: n8n-db
+databases:
+  - name: n8n-database-hub
     plan: free
     databaseName: n8ndb
     user: n8nuser
